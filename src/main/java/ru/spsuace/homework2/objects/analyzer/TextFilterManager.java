@@ -27,20 +27,32 @@ package ru.spsuace.homework2.objects.analyzer;
  * где вместо сравнение самих фильтров должно быть стравнение каких-то количественных параметров фильтра
  */
 public class TextFilterManager {
-
+    private final TextAnalyzer[] methods;
     /**
      * Для работы с каждым элементом массива, нужно использовать цикл for-each
      * Хочется заметить, что тут мы ничего не знаем, какие конкретно нам объекты переданы, знаем только то,
      * что в них реализован интерфейс TextAnalyzer
      */
-    public TextFilterManager(TextAnalyzer[] filters) {
 
+    public TextFilterManager(TextAnalyzer[] filters) {
+        this.methods = filters;
     }
 
     /**
      * Если переменная текст никуда не ссылается, то это означает, что не один фильтр не сработал
      */
     public FilterType analyze(String text) {
-        return null;
+        if (text == null|| text.equals("")) {
+            return FilterType.GOOD;
+        }
+
+        for (TextAnalyzer textAnalyzer : methods) {
+            FilterType res = textAnalyzer.analyzer(text);
+            if (res != FilterType.GOOD) {
+                return res;
+            }
+        }
+        return FilterType.GOOD;
     }
 }
+
